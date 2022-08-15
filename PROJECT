@@ -1,0 +1,9 @@
+domain: paas.il
+layout:
+- go.kubebuilder.io/v3
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
+projectName: privileged-kata-containers-webhook
+repo: github.com/paas-team-324/privileged-kata-containers-webhook
+version: "3"
