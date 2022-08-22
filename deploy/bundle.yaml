@@ -122,7 +122,7 @@ spec:
         env:
         - name: VALID_KATA_IMAGES
           value: '["nginx:1.14.1", "nginx:1.14.2"]'
-        image: paasteam324/privileged-kata-containers-webhook:0.0.1
+        image: docker.io/paasteam324/privileged-kata-containers-webhook:0.0.1
         livenessProbe:
           httpGet:
             path: /healthz
@@ -162,6 +162,40 @@ spec:
         secret:
           defaultMode: 420
           secretName: privileged-kata-containers-webhook-server-cert
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    service.beta.openshift.io/inject-cabundle: "true"
+  creationTimestamp: null
+  name: privileged-kata-containers-webhook-privileged-kata-containers-webhook-mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: ""
+    service:
+      name: privileged-kata-containers-webhook-service
+      namespace: paas-webhooks
+      path: /kata-runtime-builder-pod-mutation
+  failurePolicy: Fail
+  name: mkatapod.kb.io
+  objectSelector:
+    matchExpressions:
+    - key: openshift.io/build.name
+      operator: Exists
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pods
+  sideEffects: None
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration

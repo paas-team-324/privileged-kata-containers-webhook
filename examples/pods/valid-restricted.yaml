@@ -2,12 +2,20 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    docker-builds: "true"
+    openshift.io/build.name: example-2
   name: valid-restricted
   namespace: test
+  ownerReferences:
+  - apiVersion: build.openshift.io/v1
+    kind: Build
+    name: example-2
+    uid: aa28a635-1a6d-4986-8f02-3fd2893f8b50
+    controller: true
 spec:
   containers:
   - name: nginx
     image: nginx:1.14.2
+    securityContext:
+      privileged: true
     ports:
     - containerPort: 80

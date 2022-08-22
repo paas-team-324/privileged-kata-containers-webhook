@@ -101,6 +101,7 @@ func main() {
 
 	// setup admission webhook
 	mgr.GetWebhookServer().Register("/validate-pod", &webhook.Admission{Handler: &webhooks.PodValidationHandler{Client: mgr.GetClient()}})
+	mgr.GetWebhookServer().Register("/kata-runtime-builder-pod-mutation", &webhook.Admission{Handler: &webhooks.KataRuntimeBuilderPodMutationHandler{Client: mgr.GetClient()}})
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
